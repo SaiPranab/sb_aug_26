@@ -15,7 +15,7 @@ public class HelloApplication {
 		ApplicationContext context = SpringApplication.run(HelloApplication.class, args);
 		Greet greet = context.getBean(Greet.class);
 		greet.sayHello();
-		
+
 		System.out.println("Hello SpringBoot");
 	}
 }
