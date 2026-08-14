@@ -5,7 +5,7 @@
 <beans>
 
 <!-- bean definitions here -->
-<bean class="com.jt.hello.Greet" >
+<bean class="com.jt.hello.Greet" scope="prototype">
 </bean>
 
 </beans>
