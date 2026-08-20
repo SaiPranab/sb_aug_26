@@ -3,20 +3,20 @@ package com.jt;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-@Component("petrol")
+@Component
 @Primary
-public class PetrolEngine implements Engine{
+public class DieselEngine implements Engine{
 
   @Override
   public void startEngine() {
     // TODO Auto-generated method stub
-    System.out.println("Petrol Engine starting");
+    System.out.println("Diesel Engine starting");
   }
   
   @Override
   public void stopEngine() {
     // TODO Auto-generated method stub
-    System.out.println("Petrol Engine stopping");
+    System.out.println("Diesel Engine stopping");
   }
   
 }
