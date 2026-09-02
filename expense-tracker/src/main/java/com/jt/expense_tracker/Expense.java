@@ -17,6 +17,11 @@ public class Expense {
   private String category;
   private double price;
   private LocalDate date;
+  
+ public Expense(int id) {
+    this.id = id;
+  }
+ 
 
   // public Expense() {
   // }
