@@ -16,7 +16,7 @@ const ExpenseForm = () => {
         <div>
           <label htmlFor="" className='block font-medium text-gray-600 mb-1'>Category</label>
           <select name="" id="" className='border w-full border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500'>
-            <option value="" selected>-- Select Category --</option>
+            <option value="" >-- Select Category --</option>
             <option value="food" >Food</option>
             <option value="travel" >Travel</option>
             <option value="utilities" >Utilities</option>
