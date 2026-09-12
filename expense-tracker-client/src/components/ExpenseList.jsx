@@ -1,34 +1,21 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
 
-const ExpenseList = () => {
-  const [expenses, setExpenses] = useState([])
-
-  const getExpenses = async () => {
-    try {
-      const response = await axios.get("http://localhost:1200/expenses")
-      setExpenses(response.data)
-    } catch(err) {
-      console.log("Some Error occurred:-", err)
-    }
-  }
+const ExpenseList = ({expenses}) => {
 
   const handleDelete = async (expenseId) => {
-    try {
-      const response = await axios.delete('http://localhost:1200/expenses/' + expenseId)
-      if(response.status === 204) {
-        getExpenses();
-      } else {
-        alert("Something went wrong !!!")
+    if(confirm("Are you sure want to delete the Expense ?")) {
+      try {
+        const response = await axios.delete('http://localhost:1200/expenses/' + expenseId)
+        if(response.status === 204) {
+          getExpenses();
+        } else {
+          alert("Something went wrong !!!")
+        }
+      } catch (error) {
+        console.log("Some Error occurred:-", error)
       }
-    } catch (error) {
-      console.log("Some Error occurred:-", error)
     }
   }
-
-  useEffect(() => {
-    getExpenses()
-  }, [])
 
   return (
     <div className='bg-white rounded-2xl shadow-md p-6 mb-6'>
@@ -48,7 +35,8 @@ const ExpenseList = () => {
           </thead>
 
           <tbody>
-            {
+            { !expenses.length ?
+              <tr><td colSpan={6} className='text-center text-gray-400 py-2 text-lg font-medium italic'>No expenses recorded yet.</td></tr> :
               expenses.map((exp, idx) => (
                 <tr key={idx} className='border-b border-gray-200 hover:bg-gray-50 transition-colors'>
                   <td className='px-4 py-3 text-gray-400'>{idx+1}</td>
