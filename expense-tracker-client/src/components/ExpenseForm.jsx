@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 
-const ExpenseForm = ({getExpenses}) => {
+const ExpenseForm = ({ getExpenses }) => {
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
   const [price, setPrice] = useState('')
@@ -9,6 +9,9 @@ const ExpenseForm = ({getExpenses}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return
+
     const expense = {
       id: 0,
       title,
@@ -16,22 +19,49 @@ const ExpenseForm = ({getExpenses}) => {
       category,
       date
     }
+
     await createExpense(expense)
   }
 
   async function createExpense(expense) {
     try {
       const response = await axios.post("http://localhost:1200/expenses", expense)
-  
-      if(response.status === 201) {
+
+      if (response.status === 201) {
         getExpenses()
         clearForm()
       } else {
         alert("Something went wrong !!!")
       }
-    } catch(err) {
+    } catch (err) {
       console.log("Some Error occurred:-", err)
     }
+  }
+
+  const [errors, setErrors] = useState({})
+  const validate = () => {
+    const newErros = {}
+
+    if (!title) {
+      newErros.title = 'Title is missing.'
+    } else if (title.length <= 3) {
+      newErros.title = 'Title must have atlease 3 characters.'
+    }
+
+    if (!category) {
+      newErros.category = 'Please choose a valid category.'
+    }
+
+    if (!price || isNaN(price) || price <= 0) {
+      newErros.price = 'Price must be greater than 0.'
+    }
+
+    if (!date) {
+      newErros.date = 'Date is required.'
+    }
+
+    setErrors(newErros)
+    return Object.keys(newErros).length === 0 // {} -> true, {title: ''} -> false
   }
 
   const clearForm = () => {
@@ -47,15 +77,19 @@ const ExpenseForm = ({getExpenses}) => {
     switch (name) {
       case 'title':
         setTitle(value)
+        setErrors(prev => ({ ...prev, title: '' }))
         break;
       case 'category':
         setCategory(value)
+        setErrors(prev => ({ ...prev, category: '' }))
         break;
       case 'price':
         setPrice(value)
+        setErrors(prev => ({ ...prev, price: '' }))
         break;
       case 'date':
         setDate(value)
+        setErrors(prev => ({ ...prev, date: '' }))
         break;
     }
   }
@@ -68,7 +102,13 @@ const ExpenseForm = ({getExpenses}) => {
         {/* Title */}
         <div>
           <label htmlFor="" className='block font-medium text-gray-600 mb-1'>Title</label>
-          <input type="text" className='border w-full border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500' onChange={handleChange} name='title' value={title} />
+          <input placeholder='e.g; House Rent' type="text" className='border w-full border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500' onChange={handleChange} name='title' value={title} />
+
+          {
+            errors.title && (
+              <p className='text-red-500 mt-1 text-sm'>{errors.title}</p>
+            )
+          }
         </div>
 
         {/* Category */}
@@ -85,18 +125,36 @@ const ExpenseForm = ({getExpenses}) => {
             <option value="education" >Education</option>
             <option value="others" >Others</option>
           </select>
+
+          {
+            errors.category && (
+              <p className='text-red-500 mt-1 text-sm'>{errors.category}</p>
+            )
+          }
         </div>
 
         {/* Price */}
         <div>
           <label htmlFor="" className='block font-medium text-gray-600 mb-1'>Price</label>
-          <input type="text" className='border w-full border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500' onChange={handleChange} name='price' value={price} />
+          <input placeholder='e.g; 5000.99' type="text" className='border w-full border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500' onChange={handleChange} name='price' value={price} />
+
+          {
+            errors.price && (
+              <p className='text-red-500 mt-1 text-sm'>{errors.price}</p>
+            )
+          }
         </div>
 
         {/* Date */}
         <div>
           <label htmlFor="" className='block font-medium text-gray-600 mb-1'>Date</label>
           <input type="date" className='border w-full border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500' onChange={handleChange} name='date' value={date} />
+
+          {
+            errors.date && (
+              <p className='text-red-500 mt-1 text-sm'>{errors.date}</p>
+            )
+          }
         </div>
 
         {/* Add Expense Button */}
