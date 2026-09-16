@@ -8,12 +8,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity 
 @Table(name = "emp")
+@Builder 
 public class Employee {
   @Id 
   @GeneratedValue (strategy = GenerationType.UUID)
@@ -31,6 +36,7 @@ public class Employee {
   @Column(name = "emp_name", columnDefinition = "VARCHAR(30)", nullable = false, unique = true)
   private String name;
 
+  @Transient
   @Column(name = "emp_desc")
   @Lob // String -> TINYTEXT, byte[] -> BLOB, char[] -> CLOB
   private String description;
@@ -39,6 +45,7 @@ public class Employee {
   private BigDecimal salary;
 
   @Column(name = "emp_status")
+  @Enumerated(EnumType.STRING)
   private EmployeeStatus status;
 
   @CreationTimestamp 
