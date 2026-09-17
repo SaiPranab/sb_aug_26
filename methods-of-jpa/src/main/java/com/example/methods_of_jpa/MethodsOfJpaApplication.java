@@ -1,6 +1,7 @@
 package com.example.methods_of_jpa;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,7 +54,29 @@ public class MethodsOfJpaApplication {
 			// boolean isIphoneExists2 = productRepository.exists(Example.of(existingProduct));
 			// System.out.println(" is Iphone 17 exists 2:- " + isIphoneExists2);
 
+			// List<Product> products = productRepository.findAll();
+			// productRepository.deleteAll(products);
 			
+			// List<Product> products = productRepository.findAll(Sort.by("productPrice"));
+			// products.forEach(System.out::println);
+			
+			// Page<Product> products = productRepository.findAll(PageRequest.of(0, 5, 
+			// 																											Direction.DESC, "productId"));
+			// System.out.println("page information is " + products);
+			// // pageNumber -> 0 based indexing 
+			// // pagesize -> number of data inside the page
+			// products.forEach(System.out::println);
+
+			// Product iPhone17 = productRepository.findById(11).orElseThrow();
+			// iPhone17.setProductBrand("Samsung");
+			// productRepository.save(iPhone17);
+
+
+			// Product optGalaxy = productRepository.findByProductName("Galaxy S24").orElseThrow();
+			// System.out.println(optGalaxy);
+
+			productRepository.findAllByProductPriceBetween(10000, 50000)
+																														.forEach(System.out::println);
 		};	
 	}
 
