@@ -9,21 +9,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Product {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Data 
+@NoArgsConstructor 
+@AllArgsConstructor 
+@Entity 
+@Builder 
+public class Orders {
+  @Id 
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String orderId;
+
   private int productId;
 
-  private String productName;
-
-  private String productBrand;
-
-  private double productPrice;
-
   private int quantity;
+
+  private double totalPrice;
 }

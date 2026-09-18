@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class MethodsOfJpaApplication {
 	private final ProductRepository productRepository;
+	private final OrdersService ordersService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MethodsOfJpaApplication.class, args);
@@ -75,8 +76,25 @@ public class MethodsOfJpaApplication {
 			// Product optGalaxy = productRepository.findByProductName("Galaxy S24").orElseThrow();
 			// System.out.println(optGalaxy);
 
-			productRepository.findAllByProductPriceBetween(10000, 50000)
-																														.forEach(System.out::println);
+			// productRepository.findAllByProductPriceBetween(10000, 50000)
+			// 																											.forEach(System.out::println);
+
+			// productRepository
+			// 	.findAllByProductPriceGreaterThanEqual(50000, Sort.by(Direction.ASC, "productPrice"))
+			// 	.forEach(System.out::println);																											
+
+			// productRepository
+			// 	.findByProductNameAndProductBrand("product-112", "brand-1")
+			// 	.ifPresent(p -> System.out.println(p));
+
+			// productRepository
+			// 	.getProduct("product-2", "brand-2")
+			// 	.ifPresent(p -> System.out.println(p));
+
+			// int affectedRow = productRepository.updatePrice(12, 12000);
+			// System.out.println("No of affected rows:- " + affectedRow);
+
+			ordersService.placeOrder(11, 10);
 		};	
 	}
 
