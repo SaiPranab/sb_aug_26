@@ -21,7 +21,7 @@ public class ManyToManyApplication {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            oneWayBinding();
+//            oneWayBinding();
 
 //			SAVE - using inverse side
 
