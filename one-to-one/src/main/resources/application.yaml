@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: one-to-one
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/sb_aug
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
