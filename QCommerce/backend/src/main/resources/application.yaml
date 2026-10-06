@@ -1,3 +1,19 @@
+server:
+  port: 1200
+
 spring:
   application:
     name: backend
+
+  datasource:
+    url: jdbc:mysql://localhost/qcommerce?createDatabaseIfNotExist=true
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
