@@ -2,6 +2,7 @@ package com.qcommerce.backend.service;
 
 import com.qcommerce.backend.dto.request.CategoryRequest;
 import com.qcommerce.backend.entity.Category;
+import com.qcommerce.backend.exception.DuplicateEntryException;
 import com.qcommerce.backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public Page<Category> getAllCategories(int pageNumber, int pageSize) {
+    public Page<Category> getAllCategories(String search, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest
                 .of(pageNumber, pageSize, Sort.by("categoryName"));
 
@@ -23,6 +24,10 @@ public class CategoryService {
     }
 
     public Category createCategory(CategoryRequest categoryRequest) {
+        if(categoryRepository.existsByCategoryNameIgnoreCase(categoryRequest.categoryName())){
+            throw new DuplicateEntryException("Category name already exists");
+        }
+
         Category newCategory = Category.builder()
                 .categoryName(categoryRequest.categoryName())
                 .build();
