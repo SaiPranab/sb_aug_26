@@ -1,15 +1,15 @@
 package com.qcommerce.backend.controller;
 
 import com.qcommerce.backend.constants.AppConstants;
+import com.qcommerce.backend.dto.request.ItemRequest;
 import com.qcommerce.backend.dto.response.ItemResponse;
 import com.qcommerce.backend.dto.response.PageResponse;
 import com.qcommerce.backend.service.ItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +30,22 @@ public class ItemController {
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
         return itemService.getItems(search, categoryId, minPrice, maxPrice, active, pageSize, pageNumber, sortBy, sortDir);
+    }
+
+    @GetMapping("/{itemId}")
+    public ItemResponse getItem(@PathVariable String itemId) {
+        return itemService.getItemById(itemId);
+    }
+
+    @DeleteMapping("/{itemId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteItem(@PathVariable String itemId) {
+        itemService.deleteItemById(itemId);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ItemResponse createItem(@RequestBody @Valid ItemRequest itemRequest) {
+        return itemService.createItem(itemRequest);
     }
 }

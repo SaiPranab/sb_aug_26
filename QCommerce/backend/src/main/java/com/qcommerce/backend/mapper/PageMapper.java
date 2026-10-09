@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page;
 public class PageMapper {
     private PageMapper() {}
 
-    public static PageResponse toResponse(Page page) {
-        PageResponse response = new PageResponse(
+    public static <T> PageResponse<T> toResponse(Page<T> page) {
+        PageResponse<T> response = new PageResponse<T>(
                 page.getContent(),
                 page.getNumber(),
                 page.getSize(),
