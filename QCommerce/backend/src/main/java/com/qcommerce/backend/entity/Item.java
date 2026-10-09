@@ -24,7 +24,7 @@ public class Item {
     @Column(nullable = false)
     private double itemPrice;
 
-    private String image;
+    private String itemImage;
 
     @Column(nullable = false)
     private int availableQuantity;
