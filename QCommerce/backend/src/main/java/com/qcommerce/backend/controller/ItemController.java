@@ -29,6 +29,7 @@ public class ItemController {
             @RequestParam(defaultValue = "itemName") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
+        System.out.println("Controller Called");
         return itemService.getItems(search, categoryId, minPrice, maxPrice, active, pageSize, pageNumber, sortBy, sortDir);
     }
 
