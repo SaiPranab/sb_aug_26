@@ -19,7 +19,8 @@ public record ItemRequest(
 
         @NotNull(message = "Category is required")
         @NotBlank(message = "Category is required")
-        String categoryId
+        String categoryId,
 
+        Boolean active
 ) {
 }

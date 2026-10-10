@@ -29,7 +29,7 @@ public class ItemMapper {
                 .itemPrice(itemRequest.itemPrice())
                 .availableQuantity(itemRequest.availableQuantity())
                 .category(category)
-                .active(true)
+                .active(itemRequest.active() == null ? true : itemRequest.active())
                 .build();
     }
 }

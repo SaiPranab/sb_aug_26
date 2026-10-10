@@ -48,4 +48,10 @@ public class ItemController {
     public ItemResponse createItem(@RequestBody @Valid ItemRequest itemRequest) {
         return itemService.createItem(itemRequest);
     }
+
+    @PutMapping("/{itemId}")
+    public ItemResponse updateItem(@PathVariable String itemId,
+                                   @RequestBody @Valid ItemRequest itemRequest) {
+        return itemService.updateItem(itemId, itemRequest);
+    }
 }

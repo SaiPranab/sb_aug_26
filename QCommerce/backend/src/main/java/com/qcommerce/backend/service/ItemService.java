@@ -59,4 +59,15 @@ public class ItemService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
+
+    public ItemResponse updateItem(String itemId, ItemRequest itemRequest) {
+        findByIdOrThrow(itemId);
+        Category categoryById = findByCategoryIdOrThrow(itemRequest.categoryId());
+
+        Item exisitngItem = ItemMapper.toEntity(itemRequest, categoryById);
+        exisitngItem.setItemId(itemId);
+
+        Item updatedItem = itemRepository.save(exisitngItem);
+        return ItemMapper.toResponse(updatedItem);
+    }
 }
