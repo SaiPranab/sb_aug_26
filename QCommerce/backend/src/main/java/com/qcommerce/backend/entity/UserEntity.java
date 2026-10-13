@@ -21,7 +21,7 @@ public class UserEntity {
     @Column(unique = true, nullable = false, length = 100)
     private String userEmail;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 100)
     private String userPassword;
 
     @Enumerated(value = EnumType.STRING)

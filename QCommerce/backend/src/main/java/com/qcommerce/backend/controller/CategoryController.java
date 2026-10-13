@@ -22,7 +22,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public PageResponse<Category> getAllCategories(
+    public PageResponse<CategoryResponse> getAllCategories(
             @RequestParam(required = false) String search,
             @RequestParam(required = false, defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(required = false, defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int pageNumber

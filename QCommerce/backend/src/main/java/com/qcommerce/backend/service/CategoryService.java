@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public PageResponse<Category> getAllCategories(String search, int pageNumber, int pageSize) {
+    public PageResponse<CategoryResponse> getAllCategories(String search, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest
                 .of(pageNumber, pageSize, Sort.by("categoryName"));
 
@@ -33,7 +33,8 @@ public class CategoryService {
                 categoryRepository.findAllByCategoryNameContainingIgnoreCase(search, pageable) :
                 categoryRepository.findAll(pageable);
 
-        return PageMapper.toResponse(categoryPage);
+        Page<CategoryResponse> categoryResponsePage = categoryPage.map(CategoryMapper::toResponse);
+        return PageMapper.toResponse(categoryResponsePage);
     }
 
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
