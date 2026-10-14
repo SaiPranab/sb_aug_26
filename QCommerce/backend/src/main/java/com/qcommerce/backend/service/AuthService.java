@@ -2,12 +2,14 @@ package com.qcommerce.backend.service;
 
 import com.qcommerce.backend.dto.request.LoginRequest;
 import com.qcommerce.backend.dto.request.RegisterRequest;
+import com.qcommerce.backend.dto.response.LoginResponse;
 import com.qcommerce.backend.dto.response.UserResponse;
 import com.qcommerce.backend.entity.UserEntity;
 import com.qcommerce.backend.exception.DuplicateEntryException;
 import com.qcommerce.backend.exception.ResourceNotFoundException;
 import com.qcommerce.backend.mapper.UserMapper;
 import com.qcommerce.backend.repository.UserRepository;
+import com.qcommerce.backend.security.jwt.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +28,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final SecurityContextRepository contextRepository;
+    private final JwtService jwtService;
 
     public UserResponse registerUser(RegisterRequest request) {
         if(userRepository.existsByUserEmail(request.userEmail())){
             throw new DuplicateEntryException("Email already registered with us");
         }
 
-        UserEntity user = UserMapper.toEntity(request, null);
+        UserEntity user = UserMapper.toEntity(request, passwordEncoder);
 
         // Create empty cart when an user is registerd - Future Work
 
@@ -41,19 +43,19 @@ public class AuthService {
         return UserMapper.toResponse(savedUser);
     }
 
-    public UserResponse loginUser(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+    public LoginResponse loginUser(LoginRequest loginRequest) {
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
 
         authenticationManager.authenticate(authentication);
 
-        SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(authentication);
-        contextRepository.saveContext(context, request, response);
-
         UserEntity userEntity = userRepository.findByUserEmail(loginRequest.email())
                 .orElseThrow(() -> new ResourceNotFoundException("Email not Found"));
 
-        return UserMapper.toResponse(userEntity);
+        // generate token
+        String token = jwtService.generateToken(userEntity.getUserId(), userEntity.getUserRole().name());
+
+        // return response
+        return new LoginResponse(token);
     }
 }

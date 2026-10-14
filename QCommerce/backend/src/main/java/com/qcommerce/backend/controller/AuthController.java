@@ -2,6 +2,7 @@ package com.qcommerce.backend.controller;
 
 import com.qcommerce.backend.dto.request.LoginRequest;
 import com.qcommerce.backend.dto.request.RegisterRequest;
+import com.qcommerce.backend.dto.response.LoginResponse;
 import com.qcommerce.backend.dto.response.UserResponse;
 import com.qcommerce.backend.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,14 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserResponse login(@RequestBody @Valid LoginRequest loginRequest,
-                              HttpServletRequest request, HttpServletResponse response) {
-        return authService.loginUser(loginRequest, request, response);
+    public LoginResponse login(@RequestBody @Valid LoginRequest loginRequest) {
+        return authService.loginUser(loginRequest);
     }
 
-    @PostMapping("/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout() {
-        SecurityContextHolder.clearContext();
-    }
 }

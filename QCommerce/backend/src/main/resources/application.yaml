@@ -18,6 +18,9 @@ spring:
       hibernate:
         format_sql: true
 
+jwt:
+  secret: 0d84f67ce62a61d9eda8d58af1267ee8dbe0de40725f351de6870890e9804959
+  expirationMs: 86400000 # 24 hours in milliseconds
 
 #  security:
 #    user:
