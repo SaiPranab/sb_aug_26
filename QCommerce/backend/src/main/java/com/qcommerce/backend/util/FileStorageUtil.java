@@ -45,7 +45,7 @@ public class FileStorageUtil {
             // Create the upload directory (including any missing parent dirs)
             File uploadDirectory = new File(directory);
             if (!uploadDirectory.exists()) {
-                uploadDirectory.mkdir();
+                uploadDirectory.mkdirs();
             }
 
             // Write the file — use the full path: directory + file name
