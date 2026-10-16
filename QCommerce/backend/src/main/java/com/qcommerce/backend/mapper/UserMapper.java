@@ -19,7 +19,7 @@ public class UserMapper {
                 .profileImage(null)
                 .enabled(true)
                 .contactInfo(new ContactInfo(request.fullName(), request.phoneNumber()))
-                .addressInfo(new AddressInfo(null, null, null, null))
+                .addressInfo(new AddressInfo("", "", "", ""))
                 .build();
     }
 
