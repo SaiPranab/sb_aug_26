@@ -93,8 +93,20 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/items/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/api/items/**").hasRole(Role.ADMIN.name())
 
+                        // User profile — any authenticated user
                         .requestMatchers("/api/users/**").authenticated()
-                        .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
+
+                        // Admin user management — ADMIN only
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // Images — GET is public (UI displays images without auth)
+                        //          category & item uploads are ADMIN only
+                        //          profile image upload/delete requires authentication
+                        .requestMatchers(HttpMethod.GET,    "/api/images/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,   "/api/images/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/images/items/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,   "/api/images/users/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/images/users/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
