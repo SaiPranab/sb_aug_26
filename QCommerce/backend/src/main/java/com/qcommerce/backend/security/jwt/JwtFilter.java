@@ -26,7 +26,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         // Authorization header
         String authHeader = request.getHeader("Authorization");
 
@@ -50,16 +51,19 @@ public class JwtFilter extends OncePerRequestFilter {
             // extract the user id from token
             String userId = jwtService.extractUserId(token);
 
-            if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            if(userId != null){
                 UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getUserRole().name()));
+                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().name()));
 
                 // Authentication Object
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
 
                 // Store the Authentication Object in the Security Context
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // HttpServletRequest -> Attribute -> userId
+                request.setAttribute("userId", user.getUserId());
             }
         } catch (JwtException e) {
             SecurityContextHolder.clearContext();
@@ -70,3 +74,10 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+
+/**
+ *
+ * Authentication :- Who are you ? -> 401 (Unauthorized)
+ * Authorization :- What roles you have ? -> 403 (Forbidden)
+ *
+ */
