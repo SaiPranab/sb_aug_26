@@ -37,8 +37,6 @@ public class AuthService {
 
         UserEntity user = UserMapper.toEntity(request, passwordEncoder);
 
-        // Create empty cart when an user is registerd - Future Work
-
         UserEntity savedUser = userRepository.save(user);
         return UserMapper.toResponse(savedUser);
     }

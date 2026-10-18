@@ -9,6 +9,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -54,6 +57,11 @@ public class JwtFilter extends OncePerRequestFilter {
             if(userId != null){
                 UserEntity user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+                if(!user.isEnabled()) {
+                    sendResponse(response, HttpStatus.UNAUTHORIZED, "user is disabled. Contact Admin");
+                    return;
+                }
+
                 List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().name()));
 
                 // Authentication Object
@@ -67,11 +75,28 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         } catch (JwtException e) {
             SecurityContextHolder.clearContext();
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+            sendResponse(response, HttpStatus.UNAUTHORIZED, e.getMessage());
             return;
+        } catch (Exception e){
+            sendResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void sendResponse(HttpServletResponse response, HttpStatus status, String details) throws IOException {
+        response.setStatus(status.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        String jsonBody = """
+                {
+                    "title": "%s",
+                    "status": %d,
+                    "details": "%s",
+                    "timestamp": "%s",
+                }
+                """.formatted(status.getReasonPhrase(), status.value(), details, LocalDateTime.now());
+
+        response.getWriter().write(jsonBody);
     }
 }
 
