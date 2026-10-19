@@ -85,6 +85,14 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(CartEmptyException.class)
+    public ProblemDetail handleCartEmptyException(CartEmptyException e) {
+        ProblemDetail problemDetail = ProblemDetail
+                .forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setProperty("Timestamp", LocalDateTime.now());
+        return problemDetail;
+    }
+
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleForbidden(Exception e) {
         ProblemDetail problemDetail = ProblemDetail
